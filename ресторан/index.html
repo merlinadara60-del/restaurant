@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>MEAT&FIRE | Премиальный мясной ресторан</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш_api_ключ&lang=ru_RU" type="text/javascript"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #0b0a0a;
+      font-family: 'Inter', sans-serif;
+      color: #ece8e0;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #1e1b1a; }
+    ::-webkit-scrollbar-thumb { background: #b47c44; border-radius: 10px; }
+
+    h1, h2, h3, .logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+    h2:after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 70px;
+      height: 3px;
+      background: #c68a4a;
+      border-radius: 3px;
+    }
+    .section-sub {
+      color: #c6a27a;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .btn {
+      display: inline-block;
+      background: transparent;
+      border: 1.5px solid #c68a4a;
+      color: #c68a4a;
+      padding: 12px 32px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-align: center;
+    }
+    .btn:hover {
+      background: #c68a4a;
+      color: #0b0a0a;
+      border-color: #c68a4a;
+      box-shadow: 0 8px 20px rgba(198, 138, 74, 0.3);
+    }
+    .btn-light {
+      background: #c68a4a;
+      color: #0b0a0a;
+      border-color: #c68a4a;
+    }
+    .btn-light:hover {
+      background: transparent;
+      color: #c68a4a;
+    }
+    .btn-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    header {
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 10, 10, 0.85);
+      border-bottom: 1px solid rgba(198, 138, 74, 0.2);
+    }
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .logo { font-size: 1.9rem; font-weight: 700; letter-spacing: 2px; color: #f5e6d3; }
+    .logo span { color: #c68a4a; font-weight: 800; }
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a { text-decoration: none; color: #e0cfbc; font-weight: 500; transition: 0.2s; font-size: 0.95rem; letter-spacing: 0.5px; }
+    .nav-links a:hover, .nav-links a.active { color: #c68a4a; }
+    .menu-toggle { display: none; font-size: 1.8rem; cursor: pointer; color: #c68a4a; }
+
+    .hero {
+      min-height: 90vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: #1f1814;
+    }
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: brightness(0.55);
+    }
+    .hero .container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+    .hero-content {
+      max-width: 650px;
+      text-align: left;
+      word-break: break-word;
+    }
+    .hero h1 {
+      font-size: 4.2rem;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .hero-tagline {
+      font-size: 1.2rem;
+      color: #f0e6dc;
+      margin: 1rem 0 1.8rem;
+      border-left: 3px solid #c68a4a;
+      padding-left: 20px;
+      word-break: break-word;
+    }
+
+    section { padding: 90px 0; border-bottom: 1px solid rgba(198, 138, 74, 0.15); }
+    .dark-bg { background: #0f0e0d; }
+
+    .about-two-columns {
+      display: flex;
+      gap: 60px;
+      align-items: stretch;
+      margin-top: 48px;
+    }
+    .about-cards {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .feature-card-about {
+      background: #151210;
+      border-radius: 24px;
+      padding: 24px 28px;
+      transition: all 0.3s;
+      border: 1px solid rgba(198, 138, 74, 0.2);
+      text-align: center;
+    }
+    .feature-card-about:hover {
+      transform: translateX(5px);
+      border-color: #c68a4a;
+    }
+    .feature-text h3 {
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      font-family: 'Playfair Display', serif;
+    }
+    .feature-text p {
+      color: #cfc4b6;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    .about-photo {
+      flex: 0.9;
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 30px -10px rgba(0,0,0,0.5);
+      border: 1px solid rgba(198, 138, 74, 0.3);
+    }
+    .about-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .about-photo img:hover {
+      transform: scale(1.02);
+    }
+    .photo-caption {
+      display: none;
+    }
+
+    .full-menu-wrapper {
+      margin-top: 40px;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.5s ease;
+      background: #0a0908;
+      border-radius: 32px;
+      padding: 0 24px;
+    }
+    .full-menu-wrapper.open {
+      max-height: 20000px;
+      opacity: 1;
+      padding: 32px 24px 48px;
+      overflow-y: auto;
+    }
+    
+    .menu-categories-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px 30px;
+    }
+    .full-menu-category {
+      margin-bottom: 0;
+      break-inside: avoid;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+    }
+    .full-menu-category h3 {
+      font-size: 1.6rem;
+      color: #c68a4a;
+      font-family: 'Playfair Display', serif;
+      border-bottom: 2px solid #c68a4a;
+      display: inline-block;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    .menu-single-card {
+      background: #181512;
+      border-radius: 20px;
+      border: 1px solid rgba(198, 138, 74, 0.2);
+      padding: 20px;
+      transition: 0.2s;
+      width: 100%;
+      text-align: left;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .menu-single-card:hover {
+      border-color: #c68a4a;
+      transform: translateY(-4px);
+    }
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 12px 0;
+      border-bottom: 1px dashed rgba(198, 138, 74, 0.3);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .menu-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .item-info {
+      flex: 1;
+    }
+    .item-name {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #f0e2d4;
+    }
+    .item-desc {
+      font-size: 0.75rem;
+      color: #b9aa99;
+      margin-top: 4px;
+    }
+    .item-price {
+      color: #c68a4a;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-left: 16px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .price-number {
+      white-space: nowrap;
+    }
+    .price-weight {
+      white-space: nowrap;
+      font-weight: normal;
+      font-size: 0.85rem;
+    }
+
+    /* На компьютере цена сверху, граммы снизу */
+    @media (min-width: 881px) {
+      .item-price {
+        flex-direction: column;
+        align-items: flex-end;
+        white-space: normal;
+      }
+    }
+
+    .booking-preview {
+      background: linear-gradient(145deg, #181412, #0d0c0b);
+      border-radius: 32px;
+      padding: 48px 36px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin: 48px 0 40px;
+    }
+    .review-card {
+      background: #151210;
+      border-radius: 28px;
+      padding: 28px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(198, 138, 74, 0.2);
+    }
+    .review-card:hover {
+      transform: translateY(-5px);
+      border-color: #c68a4a;
+    }
+    .review-stars {
+      font-size: 1.4rem;
+      letter-spacing: 3px;
+      color: #c68a4a;
+      margin-bottom: 16px;
+    }
+    .review-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #e0cfbc;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .review-avatar {
+      width: 48px;
+      height: 48px;
+      background: #1f1b18;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #c68a4a;
+      border: 1px solid rgba(198, 138, 74, 0.3);
+    }
+    .review-info {
+      flex: 1;
+    }
+    .review-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #f5e6d3;
+    }
+    .review-role {
+      display: none;
+    }
+    .reviews-links {
+      display: none;
+    }
+    
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 48px;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .contact-info { 
+      flex: 1; 
+    }
+    .contact-info p { 
+      margin: 20px 0; 
+      display: flex; 
+      align-items: center; 
+      gap: 14px; 
+      flex-wrap: wrap; 
+    }
+    .contact-info i { 
+      width: 32px; 
+      font-size: 1.3rem; 
+      color: #c68a4a; 
+    }
+    
+    .map-wrapper {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(198, 138, 74, 0.3);
+      background: #1f1b18;
+      min-height: 380px;
+      width: 100%;
+      max-width: 100%;
+      border-radius: 0;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+      min-height: 380px;
+      display: block;
+    }
+    /* Оверлей для десктопа — появляется при наведении */
+    .map-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(3px);
+      color: #fff;
+      font-weight: 500;
+      text-align: center;
+      padding: 20px;
+      font-size: 1.2rem;
+      opacity: 0;
+      pointer-events: none;
+      border-radius: 0;
+    }
+    /* На десктопе оверлей появляется при наведении */
+    @media (min-width: 881px) {
+      .map-wrapper:hover .map-overlay {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+    /* На телефонах оверлей виден всегда (до активации) */
+    @media (max-width: 880px) {
+      .map-overlay {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+    .map-active .map-overlay {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    .map-overlay span {
+      background: rgba(0,0,0,0.6);
+      padding: 12px 24px;
+      border: 1px solid #c68a4a;
+      transition: all 0.2s;
+      border-radius: 0;
+    }
+    .map-overlay:hover span {
+      background: #c68a4a;
+      color: #0b0a0a;
+      transform: scale(1.02);
+    }
+    
+    /* Блок прожарок — стили с сеткой и адаптивом (иконки удалены) */
+    .doneness {
+      background: #0e0c0a;
+      border-radius: 48px;
+      padding: 48px 32px;
+      margin-top: 64px;
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+      border: 1px solid rgba(198, 138, 74, 0.2);
+      overflow-x: hidden;
+      box-sizing: border-box;
+    }
+    .doneness h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #c68a4a;
+      text-align: center;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+      position: relative;
+    }
+    .doneness h4:after {
+      content: '';
+      display: block;
+      width: 70px;
+      height: 2px;
+      background: #c68a4a;
+      margin: 12px auto 0;
+    }
+    .doneness-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .doneness-item {
+      background: #151210;
+      border-radius: 32px;
+      padding: 24px 20px 20px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      border: 1px solid rgba(198, 138, 74, 0.2);
+      backdrop-filter: blur(2px);
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .doneness-item:hover {
+      transform: translateY(-8px);
+      border-color: #c68a4a;
+      box-shadow: 0 12px 25px -10px rgba(198, 138, 74, 0.4);
+      background: #1a1613;
+    }
+    .doneness-item strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #f0e2d4;
+      margin-bottom: 8px;
+    }
+    .temp {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #c68a4a;
+      background: rgba(198, 138, 74, 0.15);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 40px;
+      margin: 12px auto 10px;
+    }
+    .doneness-item span:not(.temp) {
+      font-size: 0.8rem;
+      color: #b9aa99;
+      display: block;
+      line-height: 1.4;
+    }
+    .doneness-bar {
+      width: 100%;
+      height: 6px;
+      background: #2a241f;
+      border-radius: 10px;
+      margin-top: auto;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+    .doneness-item[data-level="rare"] .bar-fill { width: 20%; background: linear-gradient(90deg, #b8321e, #e05a2a); }
+    .doneness-item[data-level="medium-rare"] .bar-fill { width: 40%; background: linear-gradient(90deg, #c9421f, #e87a3a); }
+    .doneness-item[data-level="medium"] .bar-fill { width: 60%; background: linear-gradient(90deg, #b55a2a, #c96a2a); }
+    .doneness-item[data-level="well-done"] .bar-fill { width: 85%; background: linear-gradient(90deg, #8a4a2a, #a55a2a); }
+    
+    .doneness-item:hover .bar-fill {
+      width: calc(100% - 2px) !important;
+      transition: width 0.4s ease;
+    }
+
+    footer {
+      background: #060505;
+      padding: 48px 0 28px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #8f7e6b;
+    }
+    .social-icons {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 26px;
+    }
+    .social-icons a { color: #cfa66e; font-size: 1.3rem; transition: 0.2s; }
+    .social-icons a:hover { color: #f5e6d3; transform: scale(1.1); }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.85s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.85s ease;
+    }
+    .fade-up.appear { opacity: 1; transform: translateY(0); }
+
+    /* Десктоп: карта шире, левее и выше */
+    @media (min-width: 881px) {
+      .contact-grid {
+        overflow: visible;
+      }
+      .map-wrapper {
+        margin-left: -280px;
+        width: calc(100% + 280px);
+        transform: translateY(-120px);
+        z-index: 2;
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 880px) {
+      .container { padding: 0 20px; }
+      .hero h1 { font-size: 2.8rem; white-space: nowrap; }
+      .hero-tagline { font-size: 1rem; }
+      .nav-links { display: none; flex-direction: column; background: #11100e; position: absolute; top: 80px; left: 0; width: 100%; padding: 28px; gap: 28px; text-align: center; backdrop-filter: blur(20px); z-index: 200; }
+      .nav-links.show { display: flex; }
+      .menu-toggle { display: block; }
+      .booking-preview { flex-direction: column; text-align: center; padding: 32px 24px; }
+      .full-menu-wrapper.open { padding: 20px 16px 32px; max-height: none; overflow-y: auto; }
+      .menu-categories-grid { grid-template-columns: 1fr; gap: 32px; }
+      .full-menu-category { width: 100%; }
+      .menu-single-card { width: 100%; }
+      .full-menu-category h3 { font-size: 1.4rem; text-align: center; }
+      .item-name { font-size: 0.95rem; }
+      .item-price {
+        flex-direction: row;
+        white-space: nowrap;
+      }
+      .price-weight {
+        font-size: 0.75rem;
+      }
+      .about-two-columns { flex-direction: column; gap: 40px; }
+      .about-photo { min-height: 320px; }
+      .feature-card-about { padding: 18px 20px; }
+      .feature-text h3 { font-size: 1.2rem; }
+      .feature-text p { font-size: 0.85rem; }
+      .contact-grid { flex-direction: column; align-items: stretch; }
+      .contact-info { order: 1; }
+      .map-wrapper { order: 2; min-height: 280px; width: 100%; overflow: hidden; margin-left: 0; transform: none; }
+      #map { min-height: 280px; }
+      .doneness-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      .doneness { padding: 32px 20px; }
+      .doneness-item strong { font-size: 1.3rem; }
+      .reviews-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    @media (max-width: 550px) {
+      .doneness-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+      }
+      .doneness-item {
+        width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      .doneness {
+        padding: 32px 16px;
+      }
+    }
+    @media (max-width: 640px) {
+      .hero .container { text-align: center; }
+      .hero-content { margin: 0 auto; text-align: center; }
+      .hero-tagline { text-align: left; }
+      .btn-group { justify-content: center; }
+      .hero h1 { font-size: 2.2rem; white-space: nowrap; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.8rem; white-space: nowrap; }
+      .hero-tagline { font-size: 0.9rem; }
+      .btn { padding: 10px 20px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container nav-wrapper">
+    <div class="logo">MEAT<span>&FIRE</span></div>
+    <div class="menu-toggle" id="mobileMenuToggle"><i class="fas fa-bars"></i></div>
+    <div class="nav-links" id="navLinks">
+      <a href="#home" class="active">Главная</a>
+      <a href="#about">О ресторане</a>
+      <a href="#menu">Меню</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#contact">Контакты</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="home" class="hero">
+    <img src="./1блок.jpg" alt="MEAT&FIRE фон" class="hero-bg" loading="eager">
+    <div class="container">
+      <div class="hero-content">
+        <div class="section-sub">Премиальный мясной ресторан</div>
+        <h1>MEAT&FIRE</h1>
+        <div class="hero-tagline">
+          Идеальное место для стейк-вечера, особого ужина,<br>деловой встречи и дня рождения
+        </div>
+        <div class="btn-group">
+          <a href="#booking" class="btn btn-light">Забронировать стол <i class="fas fa-arrow-right"></i></a>
+          <a href="#menu" class="btn">Смотреть меню <i class="fas fa-chevron-down"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <div class="section-sub">Почему выбирают нас</div>
+      <h2>Атмосфера совершенства</h2>
+      <div class="about-two-columns">
+        <div class="about-cards">
+          <div class="feature-card-about fade-up"><div class="feature-text"><h3>Премиальное качество</h3><p>Стейки из охлаждённой мраморной говядины ранга Prime. Только лучшие продукты.</p></div></div>
+          <div class="feature-card-about fade-up"><div class="feature-text"><h3>Технология Josper</h3><p>Готовим при 350 °C на живом огне. Мясо сочное, с дымным ароматом.</p></div></div>
+          <div class="feature-card-about fade-up"><div class="feature-text"><h3>Искусство гостеприимства</h3><p>Профессиональная команда создаёт идеальный вечер.</p></div></div>
+          <div class="feature-card-about fade-up"><div class="feature-text"><h3>Уют и приватность</h3><p>Элегантный интерьер для неспешного ужина.</p></div></div>
+        </div>
+        <div class="about-photo">
+          <img src="./2блок.jpg" alt="Интерьер" loading="eager">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu" class="dark-bg">
+    <div class="container">
+      <div class="section-sub">Шедевры кухни</div>
+      <h2>Наше меню</h2>
+      <div class="menu-link" style="text-align: center; margin-top: 40px;">
+        <button id="toggleFullMenuBtn" class="btn">Смотреть меню <i class="fas fa-chevron-down"></i></button>
+      </div>
+      <div id="fullMenuBlock" class="full-menu-wrapper">
+        <div class="menu-categories-grid">
+          <!-- Тартары от шефа -->
+          <div class="full-menu-category"><h3>Тартары от шефа</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Тартар в русском стиле</div><div class="item-desc">С желтком, огурцом, ржаными гренками, горчичным соусом.</div></div><div class="item-price">620 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Тартар из мраморной говядины</div><div class="item-desc">На теплых рисовых чипсах.</div></div><div class="item-price">890 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Тартар Prime</div><div class="item-desc">Из мраморной говядины высшей пробы.</div></div><div class="item-price">1250 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Ростбиф из мраморной говядины</div><div class="item-desc">С костным мозгом.</div></div><div class="item-price">890 ₽</div></div></div></div>
+          <div class="full-menu-category"><h3>Стейки на кости</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Портерхаус</div><div class="item-desc">Сочетание «Нью-Йорк» и «Филе-Миньон» на Т-образной кости.</div></div><div class="item-price"><span class="price-number">1390 ₽</span><span class="price-weight">/ 100г</span></div></div><div class="menu-item"><div class="item-info"><div class="item-name">Т-Бон</div><div class="item-desc">Два стейка на кости.</div></div><div class="item-price"><span class="price-number">1450 ₽</span><span class="price-weight">/ 100г</span></div></div><div class="menu-item"><div class="item-info"><div class="item-name">Клаб стейк</div><div class="item-desc">«Нью-Йорк» на Т-образной косточке.</div></div><div class="item-price"><span class="price-number">1390 ₽</span><span class="price-weight">/ 100г</span></div></div></div></div>
+          <div class="full-menu-category"><h3>Премиальные стейки</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Филе-миньон зерновой</div><div class="item-desc">Из центральной части охлажденной вырезки.</div></div><div class="item-price"><span class="price-number">1450 ₽</span><span class="price-weight">/ 100г</span></div></div><div class="menu-item"><div class="item-info"><div class="item-name">Филе-миньон кукурузный</div><div class="item-desc">Высшая проба.</div></div><div class="item-price"><span class="price-number">2290 ₽</span><span class="price-weight">/ 100г</span></div></div><div class="menu-item"><div class="item-info"><div class="item-name">Шатобриан зерновой</div><div class="item-desc">Из головной части вырезки.</div></div><div class="item-price"><span class="price-number">1450 ₽</span><span class="price-weight">/ 100г</span></div></div><div class="menu-item"><div class="item-info"><div class="item-name">Шатобриан кукурузный</div><div class="item-desc">Премиум.</div></div><div class="item-price"><span class="price-number">2290 ₽</span><span class="price-weight">/ 100г</span></div></div><div class="menu-item"><div class="item-info"><div class="item-name">Рибай</div><div class="item-desc">Из реберной части мраморной говядины Абердин-Ангус.</div></div><div class="item-price"><span class="price-number">1490 ₽</span><span class="price-weight">/ 100г</span></div></div><div class="menu-item"><div class="item-info"><div class="item-name">Нью-Йорк (Стриплойн)</div><div class="item-desc">Из поясничной части.</div></div><div class="item-price"><span class="price-number">1390 ₽</span><span class="price-weight">/ 100г</span></div></div></div></div>
+          <div class="full-menu-category"><h3>Только MEAT&FIRE</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Куриное филе хоспер-гриль</div><div class="item-desc">С беби-картофелем, морковным муссом, сливочно-шпинатным соусом.</div></div><div class="item-price">850 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Нежная мраморная говядина в сливочном соусе</div><div class="item-desc">С картофельным пюре и хрустящими солеными огурчиками.</div></div><div class="item-price">1090 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Говяжьи рёбра из смокера</div><div class="item-desc">Томлёные 16 часов.</div></div><div class="item-price"><span class="price-number">1490 ₽</span><span class="price-weight">/ 100г</span></div></div><div class="menu-item"><div class="item-info"><div class="item-name">Бургер «MEAT&FIRE»</div><div class="item-desc">Котлета из мраморной говядины, сыр, лук фри, картофель фри, соус BBQ.</div></div><div class="item-price">1450 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Каре ягненка</div><div class="item-desc">С вишневым соусом ala Bourguignon.</div></div><div class="item-price"><span class="price-number">1790 ₽</span><span class="price-weight">/ 100г</span></div></div><div class="menu-item"><div class="item-info"><div class="item-name">Сочный бифштекс XL</div><div class="item-desc">Из рубленой мраморной говядины с яйцом пашот, луковыми чипсами, запеченной свеклой.</div></div><div class="item-price">1450 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Техасский брискет</div><div class="item-desc">Томлёная грудная часть мраморной говядины. Подается с картофелем фри, корнишонами, томатами, горчицей, сливочным соусом и шрирача.</div></div><div class="item-price"><span class="price-number">950 ₽</span><span class="price-weight">/ 100г</span></div></div></div></div>
+          <div class="full-menu-category"><h3>Салаты</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Оливье с ростбифом</div><div class="item-desc">Из мраморной говядины.</div></div><div class="item-price">840 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Салат с филе цыпленка и баклажанами</div><div class="item-desc">Со спелыми томатами, кедровыми орешками, кисло-сладким соусом.</div></div><div class="item-price">790 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Ростбиф из мраморной говядины</div><div class="item-desc">С жареным картофелем, томатами, сладкой паприкой, рукколой и кремом «Бальзамик».</div></div><div class="item-price">890 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Сербский салат</div><div class="item-desc">С печеным перцем, спелыми томатами, свежими огурцами и сербской брынзой.</div></div><div class="item-price">750 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Салат с семгой и авокадо</div><div class="item-desc">Листья салата, медово-горчичный взвар.</div></div><div class="item-price">1450 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Куриное филе-гриль</div><div class="item-desc">С листьями салата, дольками апельсина, соусом «Маракуйя».</div></div><div class="item-price">990 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Греческий салат</div><div class="item-desc">С оливками-гигантами, красным луком, особой брынзой.</div></div><div class="item-price">950 ₽</div></div></div></div>
+          <div class="full-menu-category"><h3>Закуски</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Дегустационный винный сет</div><div class="item-desc">С бастурмой, паштетом, вялеными томатами, оливками, чиабаттой, сливочным сыром.</div></div><div class="item-price">1290 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Куриные наггетсы</div><div class="item-desc">С хрустящей панировкой, сладко-острый соус «Чили».</div></div><div class="item-price">890 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Карпаччо del TORO</div><div class="item-desc">Из филе мраморной говядины с соусом авиатор, кремом «Бальзамик», кедровыми орешками, каперсами.</div></div><div class="item-price">1690 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Семга, подкопченная на ольховой щепе</div><div class="item-desc">С селедочным маслом и белыми тостами.</div></div><div class="item-price">1850 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Ассорти крафтовых и выдержанных сыров</div><div class="item-desc"></div></div><div class="item-price">1490 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Закусочный сет из солений</div><div class="item-desc">Корейская морковь, бочковые огурцы, помидоры, квашеная капуста, шпик, ростбиф, ржаные гренки.</div></div><div class="item-price">690 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Хамон Серрано</div><div class="item-desc">10 гр.</div></div><div class="item-price">420 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Свежие овощи и зелень по сезону</div><div class="item-desc"></div></div><div class="item-price">550 ₽</div></div></div></div>
+          <div class="full-menu-category"><h3>Супы</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Том ям с курицей</div><div class="item-desc">С куриным филе, грибами, томатами, на кокосовом молоке.</div></div><div class="item-price">1350 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Тыквенный суп</div><div class="item-desc">С творожным сыром, морскими гребешками.</div></div><div class="item-price">1690 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Техасский суп с брискетом</div><div class="item-desc">С копчёным брискетом, тёмным элем, тимьяном, фасолью, кукурузой.</div></div><div class="item-price">1290 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Наваристый борщ</div><div class="item-desc">С мраморной говядиной и особым смальцем.</div></div><div class="item-price">750 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Шурпе</div><div class="item-desc">Чувашский национальный суп на насыщенном мясном бульоне.</div></div><div class="item-price">890 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Окрошка с ростбифом</div><div class="item-desc">Из мраморной говядины и индейкой (на квасе/кефир).</div></div><div class="item-price">850 ₽</div></div></div></div>
+          <div class="full-menu-category"><h3>Гарниры</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Картофель фри</div><div class="item-desc">Хрустящий, с солью и специями.</div></div><div class="item-price">290 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Картофель по-деревенски</div><div class="item-desc">Запеченный с розмарином и чесноком.</div></div><div class="item-price">320 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Овощи-гриль</div><div class="item-desc">Цукини, сладкий перец, баклажан, томаты.</div></div><div class="item-price">380 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Рис с овощами</div><div class="item-desc">Ароматный, с кукурузой и горошком.</div></div><div class="item-price">290 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Спаржа на гриле</div><div class="item-desc">С лимонным маслом и пармезаном.</div></div><div class="item-price">490 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Пюре из картофеля трюфельное</div><div class="item-desc">Нежное, с маслом трюфеля.</div></div><div class="item-price">390 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Картофель айдахо</div><div class="item-desc">Дольки с паприкой и чесночным маслом.</div></div><div class="item-price">340 ₽</div></div></div></div>
+          <div class="full-menu-category"><h3>Десерты</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Тирамису</div><div class="item-desc">Классический итальянский десерт с маскарпоне и кофе.</div></div><div class="item-price">450 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Чизкейк Нью-Йорк</div><div class="item-desc">Нежный сливочный чизкейк с ягодным соусом.</div></div><div class="item-price">420 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Брауни с мороженым</div><div class="item-desc">Шоколадное брауни с ванильным пломбиром.</div></div><div class="item-price">390 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Медовик</div><div class="item-desc">Домашний многослойный медовый торт.</div></div><div class="item-price">350 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Наполеон</div><div class="item-desc">Хрустящие коржи с нежным заварным кремом.</div></div><div class="item-price">380 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Панна-котта</div><div class="item-desc">Сливочный десерт с малиновым кули.</div></div><div class="item-price">370 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Фондю шоколадное</div><div class="item-desc">Топленый шоколад с фруктами и зефиром.</div></div><div class="item-price">590 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Мороженое ассорти</div><div class="item-desc">Ванильное, шоколадное, клубничное.</div></div><div class="item-price">250 ₽</div></div></div></div>
+          <div class="full-menu-category"><h3>Безалкогольные напитки</h3><div class="menu-single-card"><div class="menu-item"><div class="item-info"><div class="item-name">Вода столовая (0.5л)</div><div class="item-desc">Bonaqua / Святой источник.</div></div><div class="item-price">250 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Вода газированная (0.5л)</div><div class="item-desc">Bonaqua / Святой источник.</div></div><div class="item-price">250 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Авторский лимонад</div><div class="item-desc">Имбирный, лавандовый, маракуйя (0.4л).</div></div><div class="item-price">390 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Морс клюквенный</div><div class="item-desc">Домашний, с мятой.</div></div><div class="item-price">320 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Сок свежевыжатый</div><div class="item-desc">Апельсин, грейпфрут, яблоко.</div></div><div class="item-price">390 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Чай чёрный / зелёный</div><div class="item-desc">Классический, с бергамотом, жасминовый.</div></div><div class="item-price">290 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Кофе эспрессо</div><div class="item-desc">Двойной эспрессо.</div></div><div class="item-price">250 ₽</div></div><div class="menu-item"><div class="item-info"><div class="item-name">Капучино / Латте</div><div class="item-desc">Итальянская обжарка.</div></div><div class="item-price">320 ₽</div></div></div></div>
+        </div>
+      </div>
+      <!-- Блок степеней прожарки (без иконок) -->
+      <div class="doneness fade-up">
+        <h4>Степени прожарки стейка</h4>
+        <div class="doneness-grid">
+          <div class="doneness-item" data-level="rare">
+            <strong>RARE</strong>
+            <div class="temp">40–45°C</div>
+            <span>слабая прожарка, красный центр</span>
+            <div class="doneness-bar"><div class="bar-fill"></div></div>
+          </div>
+          <div class="doneness-item" data-level="medium-rare">
+            <strong>MEDIUM RARE</strong>
+            <div class="temp">45–50°C</div>
+            <span>среднеслабая, сочная середина</span>
+            <div class="doneness-bar"><div class="bar-fill"></div></div>
+          </div>
+          <div class="doneness-item" data-level="medium">
+            <strong>MEDIUM</strong>
+            <div class="temp">50–55°C</div>
+            <span>средняя прожарка, розовый сок</span>
+            <div class="doneness-bar"><div class="bar-fill"></div></div>
+          </div>
+          <div class="doneness-item" data-level="well-done">
+            <strong>WELL DONE</strong>
+            <div class="temp">от 60°C</div>
+            <span>полностью прожаренный</span>
+            <div class="doneness-bar"><div class="bar-fill"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews" class="dark-bg">
+    <div class="container">
+      <div class="section-sub">Гости говорят</div>
+      <h2>Отзывы и рейтинги</h2>
+      <div class="reviews-grid">
+        <div class="review-card fade-up">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">«Невероятная атмосфера и лучший стейк, который я пробовала! Мясо тает во рту, обслуживание безупречное. Обязательно вернусь снова.»</div>
+          <div class="review-author">
+            <div class="review-avatar">А</div>
+            <div class="review-info"><div class="review-name">Александра</div></div>
+          </div>
+        </div>
+        <div class="review-card fade-up">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">«Отличное место для делового ужина. Очень вкусная кухня, особенно понравились рёбра из смокера. Персонал внимательный, интерьер стильный.»</div>
+          <div class="review-author">
+            <div class="review-avatar">М</div>
+            <div class="review-info"><div class="review-name">Михаил</div></div>
+          </div>
+        </div>
+        <div class="review-card fade-up">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">«Романтический ужин удался на славу! Шеф-повар приготовил великолепный рибай. Отдельное спасибо за десерт — тирамису выше всяких похвал.»</div>
+          <div class="review-author">
+            <div class="review-avatar">Е</div>
+            <div class="review-info"><div class="review-name">Екатерина</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="booking">
+    <div class="container">
+      <div class="booking-preview">
+        <div class="booking-info">
+          <i class="fas fa-calendar-alt" style="font-size: 2rem; color:#c68a4a;"></i>
+          <h3>Забронируйте столик</h3>
+          <small>Для стейк-вечера, дня рождения или деловой встречи</small>
+          <p style="margin-top: 12px;">Пн–Вс: 12:00 – 23:00</p>
+        </div>
+        <div>
+          <a href="tel:+74951234567" class="btn btn-light"><i class="fas fa-phone-alt"></i> +7 (495) 123-45-67</a>
+          <p style="margin-top: 12px; font-size:0.8rem;">Или напишите нам в Instagram / WhatsApp</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="section-sub">Визит и связь</div>
+      <h2>Где нас найти</h2>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <p><i class="fas fa-map-marker-alt"></i> г. Москва, ул. Тверская, д. 12</p>
+          <p><i class="fas fa-phone-alt"></i> +7 (495) 123-45-67  |  +7 (999) 123-45-67</p>
+          <p><i class="far fa-clock"></i> Ежедневно: 12:00 – 23:00</p>
+          <p><i class="fas fa-credit-card"></i> Средний чек: 4000–5000 ₽</p>
+          <div style="margin-top: 24px;"><a href="mailto:info@meatandfire.ru" class="btn">info@meatandfire.ru</a></div>
+        </div>
+        <div class="map-wrapper" id="mapWrapper">
+          <div id="map" style="width:100%; height:100%; min-height: 380px;"></div>
+          <div class="map-overlay" id="mapOverlay">
+            <span>Нажмите, чтобы активировать карту</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="logo" style="font-size: 1.7rem;">MEAT<span>&FIRE</span></div>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-telegram"></i></a>
+      <a href="#"><i class="fab fa-vk"></i></a>
+      <a href="#"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <p>© 2026 MEAT&FIRE — Премиальный мясной ресторан для стейк-вечера, особого ужина, деловой встречи и дня рождения.</p>
+    <p>Все права защищены.</p>
+  </div>
+</footer>
+
+<script>
+  const toggleBtn = document.getElementById('mobileMenuToggle');
+  const navLinksEl = document.getElementById('navLinks');
+  if(toggleBtn) toggleBtn.onclick = () => navLinksEl.classList.toggle('show');
+
+  const sections = document.querySelectorAll('section');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    const scrollPos = window.scrollY + 150;
+    sections.forEach(section => {
+      if(scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.clientHeight)
+        current = section.getAttribute('id');
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.classList.remove('active');
+      if(link.getAttribute('href') === `#${current}`) link.classList.add('active');
+    });
+    document.querySelectorAll('.fade-up').forEach(el => {
+      if(el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('appear');
+    });
+  });
+  window.dispatchEvent(new Event('scroll'));
+
+  const toggleMenuBtn = document.getElementById('toggleFullMenuBtn');
+  const fullMenuBlock = document.getElementById('fullMenuBlock');
+  if(toggleMenuBtn && fullMenuBlock) {
+    toggleMenuBtn.addEventListener('click', () => {
+      const wasOpen = fullMenuBlock.classList.contains('open');
+      fullMenuBlock.classList.toggle('open');
+      toggleMenuBtn.innerHTML = fullMenuBlock.classList.contains('open') ? 'Свернуть меню <i class="fas fa-chevron-up"></i>' : 'Смотреть меню <i class="fas fa-chevron-down"></i>';
+      if (!wasOpen && fullMenuBlock.classList.contains('open')) {
+        setTimeout(() => {
+          const rect = fullMenuBlock.getBoundingClientRect();
+          const absoluteTop = window.scrollY + rect.top;
+          window.scrollTo({ top: absoluteTop - 80, behavior: 'smooth' });
+        }, 100);
+      }
+    });
+  }
+  document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => navLinksEl.classList.remove('show')));
+
+  ymaps.ready(init);
+  let myMap;
+  function init() {
+    myMap = new ymaps.Map("map", {
+      center: [55.7602, 37.6056],
+      zoom: 16,
+      controls: ['zoomControl', 'fullscreenControl']
+    });
+    // Без метки
+    
+    const mapWrapper = document.getElementById('mapWrapper');
+    const mapOverlay = document.getElementById('mapOverlay');
+    function activateMap() {
+      mapWrapper.classList.add('map-active');
+    }
+    mapOverlay.addEventListener('click', activateMap);
+  }
+</script>
+</body>
+</html>
